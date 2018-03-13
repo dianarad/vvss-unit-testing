@@ -11,25 +11,35 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class StudentFileRepository implements FileRepository<Student>{
+
     String fileName;
     BufferedWriter writer;
     BufferedReader reader;
+
 
     public StudentFileRepository(String fileName) {
         this.fileName = fileName;
     }
 
-    @Override
-    public void add(Student student)
+
+    public boolean add(Student student)
     {
+        if (null == student)
+        {
+            return false;
+        }
+
         try {
             this.openFile("a");
             writer.write(student.toString() + "\n");
             this.closeFile("a");
+            return true;
         } catch (IOException error) {
             System.out.println(error.getMessage());
+            return false;
         }
     }
+
 
     private void overwrite(List<Student> newStudents)
     {
@@ -44,12 +54,12 @@ public class StudentFileRepository implements FileRepository<Student>{
         }
     }
 
-    @Override
+
     public void remove(Student student)
     {
     }
 
-    @Override
+
     public void update(Student oldStudent, Student newStudent)
     {
         List<Student> allStudents = getAll();
@@ -68,6 +78,7 @@ public class StudentFileRepository implements FileRepository<Student>{
 
         overwrite(allStudents);
     }
+
 
     public Student getOne(String registrationNumber)
     {
@@ -98,7 +109,7 @@ public class StudentFileRepository implements FileRepository<Student>{
         }
     }
 
-    @Override
+
     public List<Student> getAll()
     {
         List<Student> allStudents = new ArrayList<Student>();
@@ -127,7 +138,6 @@ public class StudentFileRepository implements FileRepository<Student>{
     }
 
 
-    @Override
     public void openFile(String mode) throws IOException
     {
         if (mode.toLowerCase().contains("a")) {
@@ -143,7 +153,7 @@ public class StudentFileRepository implements FileRepository<Student>{
         }
     }
 
-    @Override
+
     public void closeFile(String mode) throws IOException
     {
         if (mode.toLowerCase().contains("w") || mode.toLowerCase().contains("a")) {
